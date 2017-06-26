@@ -1,24 +1,28 @@
 # makesapdb
 Produces an SAP-formatted Fasta from GIs, Accessions, scientific names, or taxonomic identifiers
 
-
-
+Thanks to Darcy Jones (https://github.com/darcyabjones) for gi-2-tax package, which this package uses. 
 
 **Key types:**
 1. NCBI GenInfo identifiers (GI)
-2. NCBI Accession.Version 
+2. NCBI Accession.Version (Coming Soon)
 3. Scientific name
 4. NCBI taxonomic identifier
 
-More information on GI and Accession Numbershttps://www.ncbi.nlm.nih.gov/genbank/sequenceids/
+More information on GI and Accession Numbers: https://www.ncbi.nlm.nih.gov/genbank/sequenceids/
 
+
+### Requirements
+
+python3, python3-ete3
 
 ### Installation
 
-python3
-git clone gi2tax 
-install ete3
 
+		git clone https://github.com/ekrell/makesapdb.git
+		cd makesapdb
+		git clone https://github.com/darcyabjones/gi-to-tax.git
+		
 		wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/gi_taxid_nucl.dmp.gz
 		wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/gi_taxid_nucl.dmp.gz.md5
 		md5sum -c gi_taxid_nucl.dmp.gz.md5
@@ -35,18 +39,35 @@ install ete3
 		tar -zxf taxdump.tar.gz
 
 
-
 ### File Preparation
 
+Input Fasta must be such that each sequence header is just the key. 
+
+Example (Scientific name):
+
+		>B.taurus
+		CAAAAACATCGCCTCTTGCAAAATCAATGAATAAGAGGTCCCGCCTGCCCTGTGACTATAAGTTTAACGG
+		CCGCGGTATTTTGACCGTGCGAAGGTAGCGCAATCACTTGTCTTTTAAATGGAGACCTGTATGAATGGCA
+
+Example (GI):
+
+		>123
+		CAAAAACATCGCCTCTTGCAAAATCAATGAATAAGAGGTCCCGCCTGCCCTGTGACTATAAGTTTAACGG
+		CCGCGGTATTTTGACCGTGCGAAGGTAGCGCAATCACTTGTCTTTTAAATGGAGACCTGTATGAATGGCA
 
 
 ### Quick Start
 
 Use a single command to convert a Fasta to SAP-compatible Fasta
 
+Must supply a key type: GI, SCINAME, or TAXID
+
 		bash makesapdb_wrapper.sh -f <original_fasta_file> -o <SAP_fasta_file> -t <key_type>
 
 ### Manual Mode
+
+Does the same as above, but the gi-to-tax command has a wealth of options for more control. 
+
 
 Use GIs to get taxonomic information.
 
@@ -59,6 +80,7 @@ Generate SAP-compatible headers
 Generate SAP-compatible Fasta
 
 		python3 makesapdb -s <header_file> -f <original_fasta_file> -o <SAP_fasta_file>
+
 
 		
 
