@@ -58,11 +58,13 @@ Example (GI):
 
 ### Quick Start
 
-Use a single command to convert a Fasta to SAP-compatible Fasta
+Use one (wrapper) command to convert a Fasta to SAP-compatible Fasta
 
-Must supply a key type: GI, SCINAME, or TAXID
+Must be in this directory when using the wrapper. It assumes that the various scripts of makesapdb are accessable from this point for simplicity. 
 
-		bash makesapdb_wrapper.sh -f <original_fasta_file> -o <SAP_fasta_file> -t <key_type>
+Must supply a key type (GI, SCINAME, or TAXID) and a header type (MINIMAL, NCBI, KEYVALUE)
+
+		bash makesapdb_wrapper.sh -f <original_fasta_file> -o <SAP_fasta_file> -t <key_type> -l <header_type>
 
 ### Manual Mode
 
@@ -82,12 +84,3 @@ Generate SAP-compatible Fasta
 		python3 makesapdb -s <header_file> -f <original_fasta_file> -o <SAP_fasta_file>
 
 
-		
-
-
-
-
-
-
-
-		

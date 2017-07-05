@@ -11,7 +11,7 @@ from Bio import SeqIO
 
 
 
-def main (fasta_file, header_file, output_fasta):
+def main (fasta_file, header_file, output_fasta, key_type):
     
     if fasta_file is None or header_file is None:
         sys.stderr.write ("error: Both the '-f' and 's' arguments are required")
@@ -24,6 +24,7 @@ def main (fasta_file, header_file, output_fasta):
     with open(header_file) as h:
         headers = h.read().splitlines()
 
+    print (headers)
 
     gisNotFound = []
     output = open (output_fasta, 'w')
@@ -31,7 +32,10 @@ def main (fasta_file, header_file, output_fasta):
     print ("Building SAP-formatted FASTA")
     for header in headers:
         try:
-            gi = re.search('^>[0-9]*|', header).group(0).replace ('>', '')
+            if (key_type == "GI" or key_type == "TAXID"):
+                gi = re.search('^>[0-9]*|', header).group(0).replace ('>', '')
+            elif (key_type == "SCINAME"):
+                gi = re.search("; [^;]*$", header).group(0).replace ('; ', '').replace ("']", '').replace (" ", "_")
             entry = fasta_dict[gi]
             output.write (header + '\n')
             output.write (str (entry.seq) + '\n')
@@ -66,6 +70,14 @@ if __name__ == '__main__':
         dest='output_fasta',
         help=(
             "Path to output file to write SAP-formatted FASTA to"
+            )
+        )
+    arg_parser.add_argument(
+        "-k", "--key_type",
+        dest='key_type',
+        help=(
+            "Type of key to use for matching up SAP headers and minimal Fasta."
+            "Options: 'GI', 'SCINAME', 'TAXID'"
             )
         )
     args = arg_parser.parse_args()
