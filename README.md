@@ -23,6 +23,8 @@ python3, python3-ete3
 		cd makesapdb
 		git clone https://github.com/darcyabjones/gi-to-tax.git
 		
+		cd gi-to-tax
+		
 		wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/gi_taxid_nucl.dmp.gz
 		wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/gi_taxid_nucl.dmp.gz.md5
 		md5sum -c gi_taxid_nucl.dmp.gz.md5
@@ -37,6 +39,8 @@ python3, python3-ete3
 		wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz.md5
 		md5sum -c taxdump.tar.gz.md5
 		tar -zxf taxdump.tar.gz
+
+		cd ..
 
 
 ### File Preparation
@@ -71,11 +75,11 @@ Similarly, a SCINAME file would look like:
 
 Use one (wrapper) command to convert a Fasta to SAP-compatible Fasta
 
-Must be in this directory when using the wrapper. It assumes that the various scripts of makesapdb are accessable from this point for simplicity. 
+Must be in this directory when using the wrapper. It assumes that the various scripts of makesapdb are accessable from this point for simplicity. System-wide package installation coming soon.
 
 Must supply a key type (GI, SCINAME, or TAXID) and a header type (MINIMAL, NCBI, KEYVALUE)
 
-		bash makesapdb_wrapper.sh -f <original_fasta_file> -o <SAP_fasta_file> -t <key_type> -l <header_type>
+		bash ./makesapdb_wrapper.sh -i <input_fasta> -o <output_SAP_fasta> -k <key_type> -l <header_type> -t gi-to-tax
 
 ### Manual Mode
 
