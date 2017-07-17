@@ -7,8 +7,8 @@ from ete3 import NCBITaxa
 
 program = "tax2tax"
 version = "0.1.0"
-author = "Evan Krell"
-date = "23 June 2017"
+author = "Evan Krell, Darcy Jones"
+date = "17 July 2017"
 email = "evan.krell@tamucc.edu"
 blurb = (
     "{program}\n"
