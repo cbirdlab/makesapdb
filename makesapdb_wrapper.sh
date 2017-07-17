@@ -136,12 +136,12 @@ case $header_type in
 			;;
 	'NCBI') 	grep 'gi|[0-9]*' -i -o  $input_fasta | sed -e 's/gi|//' > $file_keys
 			grep 'gi|[0-9]*' -i --invert-match  $input_fasta > $file_sequences
-			paste $file_keys $file_sequences > $file_fasta_minimal -d '\n'
+			sed -e "s/^/>/" $file_keys | paste /dev/stdin $file_sequences > $file_fasta_minimal -d '\n'
 			input_fasta=$file_fasta_minimal
 			# Create MINIMAL fasta
 			;;
 	'KEYVALUE') 	grep "$key_type=[^;]*;" -i -o $input_fasta | sed -e "s/$key_type=//" -e "s/;//" -e "s/ /_/g" > $file_keys
-			grep "$key_type=[^;]*;" -i --invert-match $input_fasta  > $file_sequences
+			grep "$key_type=[^;]*;" -i --invert-match $input_fasta > $file_sequences
 			sed -e "s/^/>/" $file_keys | paste /dev/stdin $file_sequences > $file_fasta_minimal -d '\n'
 			input_fasta=$file_fasta_minimal
 			# Create MINIMAL fasta
@@ -157,9 +157,9 @@ echo "Using '$key_type' keys to extract taxonomic information"
 case $key_type in
 	'GI') 		python3 gi-to-tax/gi2tax.py -d $taxon_db -i $file_keys -o $file_taxons -r "[0-9]*" -t nucleotide
 			;;
-	'SCINAME') 	python3 gi-to-tax/tax2tax.py -i $file_keys -o $file_taxons -t sciname
+	'SCINAME') 	python3 tax2tax.py -i $file_keys -o $file_taxons -t sciname
 			;;
-	'TAXID') 	python3 gi-to-tax/tax2tax.py -i $file_keys -o $file_taxons -t taxid
+	'TAXID') 	python3 tax2tax.py -i $file_keys -o $file_taxons -t taxid
 			;;
 	*) 		echo "Key type '$key_type' is invalid" >&2
 			exit 1

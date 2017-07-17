@@ -24,23 +24,21 @@ def main (fasta_file, header_file, output_fasta, key_type):
     with open(header_file) as h:
         headers = h.read().splitlines()
 
-    print (headers)
-
     gisNotFound = []
     output = open (output_fasta, 'w')
 
     print ("Building SAP-formatted FASTA")
     for header in headers:
-        try:
-            if (key_type == "GI" or key_type == "TAXID"):
-                gi = re.search('^>[0-9]*|', header).group(0).replace ('>', '')
-            elif (key_type == "SCINAME"):
-                gi = re.search("; [^;]*$", header).group(0).replace ('; ', '').replace ("']", '').replace (" ", "_")
-            entry = fasta_dict[gi]
-            output.write (header + '\n')
-            output.write (str (entry.seq) + '\n')
-        except Exception:
-            gisNotFound.append (gi)
+        #try:
+        if (key_type == "GI" or key_type == "TAXID"):
+            gi = re.search('^>[0-9]*|', header).group(0).replace ('>', '')
+        elif (key_type == "SCINAME"):
+            gi = re.search("; [^;]*$", header).group(0).replace ('; ', '').replace ("']", '').replace (" ", "_")
+        entry = fasta_dict[gi]
+        output.write (header + '\n')
+        output.write (str (entry.seq) + '\n')
+        #except Exception:
+        #    gisNotFound.append (gi)
 
     output.close () 
 
