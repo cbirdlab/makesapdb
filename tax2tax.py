@@ -40,7 +40,7 @@ license = (
 def main (in_file, out_file, in_type):
 
     ncbi = NCBITaxa()
-    record = {}
+    record = {'taxid':None, 'gi':None,'id':None}
 
     output = None
     if out_file is not None:
@@ -49,13 +49,12 @@ def main (in_file, out_file, in_type):
     with open(in_file, 'r') as fh:
         queries = fh.read().splitlines()
 
-    queries = [x for x in queries if x]
-    
+    queries = [x.replace("_", " ") for x in queries if x]
     try:
         if in_type == "taxid":
             queries = list(ncbi.get_taxid_translator(queries).values())
         taxons = ncbi.get_name_translator(queries)
-        record['taxid'] == taxons[query[0]][0]
+        record['taxid'] == taxons[queries[0]][0]
     except:
         print ("Unable to read keys.")
         print ("Are you using the right type ('-t') option?")
