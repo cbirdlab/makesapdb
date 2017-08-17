@@ -37,17 +37,17 @@ license = (
     ).format(**locals())
 
 
-def main (in_file, out_file, in_type):
+def main (in_file, out_file, in_type, out_filetype):
 
     ncbi = NCBITaxa()
+    records = []
     record = {'taxid':None, 'gi':None,'id':None}
-
-    output = None
-    if out_file is not None:
-        output = open(out_file, 'w')
 
     with open(in_file, 'r') as fh:
         queries = fh.read().splitlines()
+
+    if out_filetype == 'JSON':
+                output = open(out_file, 'w')
 
     queries = [x.replace("_", " ") for x in queries if x]
     try:
@@ -81,10 +81,24 @@ def main (in_file, out_file, in_type):
             lin = ncbi.get_lineage(l)
             tax_path_entry['parent_taxid'] = lin[-2]
             record['tax_path'].append (tax_path_entry)
-        if output is not None:
-            output.write(json.dumps(record) + '\n')
+
+
+        if out_file is not None:
+            if out_filetype == 'JSON':
+                output = open(out_file, 'w')
+                output.write(json.dumps(record) + '\n')
         else:
             sys.stdout.write(json.dumps(record) + '\n')
+
+        records.append(record)
+
+    if out_filetype == 'CSV':
+        with open (out_file, 'w') as csvfile:
+            fieldnames = ['ID', 'GI', 'TAXID']
+            writer = csv.DictWriter(csvfile, fieldnames = fieldnames)
+            writer.writeheader ()
+            for record in records:
+                writer.writerow({'ID': record['id'], 'GI':record['gi'], 'TAXID':record['taxid']})
 
 
 if __name__ == '__main__':
@@ -99,6 +113,7 @@ if __name__ == '__main__':
     arg_parser.add_argument(
         "-o", "--outfile",
         dest='out_file',
+        default = None,
         help=(
             "Path to write output to."
             "Enter '-' for stdout (default)."
@@ -110,6 +125,14 @@ if __name__ == '__main__':
         default="sciname",
         help=(
             "Type of input entries. Either 'sciname' or 'taxid'"
+            )
+        )
+    arg_parser.add_argument(
+        "-f", "--filetype",
+        dest='out_filetype',
+        default="JSON",
+        help=(
+            "Type of file. Either 'JSON' or 'CSV'"
             )
         )
     args = arg_parser.parse_args()
