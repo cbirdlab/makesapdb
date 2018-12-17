@@ -73,6 +73,7 @@ def main (in_file, out_file, in_type, out_filetype):
         lineage_ranks = ncbi.get_rank (lineage)
         lineage.pop()
         lineage.pop(0)
+        print (lineage_names)
         for l in lineage:
             tax_path_entry = {}
             tax_path_entry['taxid'] = l
